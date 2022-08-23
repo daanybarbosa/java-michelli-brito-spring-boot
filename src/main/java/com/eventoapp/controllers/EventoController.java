@@ -6,12 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class EventoController {
 
     @Autowired
-    private EventoRepository eventoRepository;
+    private EventoRepository er;
 
     @RequestMapping(value="/cadastrarEvento", method = RequestMethod.GET) //ira retornar um formulario
     public String form(){
@@ -22,8 +23,18 @@ public class EventoController {
     public String form(Evento evento){
 
         //persistir no banco de dados
-        eventoRepository.save(evento);
+        er.save(evento);
 
         return "redirect:/cadastrarEvento";  //redirecionar para o /cadastrarEvento do metodo GET
+    }
+
+    //metodo para retornar a lista de eventos
+    @RequestMapping("/eventos")
+    public ModelAndView listaEventos(){
+        ModelAndView mv = new ModelAndView("index"); //ira rederizar a pagina index
+        Iterable<Evento> eventos = er.findAll(); //buscar uma lista de eventos
+        mv.addObject("eventos", eventos); //parametros: nomeDaView (html) + lista de eventos
+
+        return mv;
     }
 }

@@ -1,4 +1,4 @@
-package com.eventoapp;
+package com.eventoapp.data;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
