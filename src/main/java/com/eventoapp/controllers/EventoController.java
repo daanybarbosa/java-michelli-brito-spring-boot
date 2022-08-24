@@ -1,6 +1,8 @@
 package com.eventoapp.controllers;
 
+import com.eventoapp.models.Convidado;
 import com.eventoapp.models.Evento;
+import com.eventoapp.repository.ConvidadoRepository;
 import com.eventoapp.repository.EventoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,6 +16,9 @@ public class EventoController {
 
     @Autowired
     private EventoRepository er;
+
+    @Autowired
+    private ConvidadoRepository cr;
 
     @RequestMapping(value="/cadastrarEvento", method = RequestMethod.GET) //ira retornar um formulario
     public String form(){
@@ -37,11 +42,22 @@ public class EventoController {
     }
 
     // Quando clicar em cima do nome do evento ira redirecionar para o respectivo codigo do evento e exibir os detalhes do mesmo.
-    @RequestMapping("/{codigo}")
+    @RequestMapping(value = "/{codigo}", method = RequestMethod.GET)
     public ModelAndView detalhesEvento(@PathVariable("codigo") Long codigo) {
         Evento evento = er.findByCodigo(codigo);
         ModelAndView mv = new ModelAndView("evento/detalhesEvento"); //caminho do html detalhesEvento
         mv.addObject("evento", evento);
+
+        Iterable<Convidado> convidados = cr.findByEvento(evento); // lista de convidados de acordo com cada evento
+        mv.addObject("convidados", convidados);
         return mv;
+    }
+
+    @RequestMapping(value = "/{codigo}", method = RequestMethod.POST)
+    public String detalhesEventoPost(@PathVariable("codigo") Long codigo, Convidado convidado) {
+        Evento evento = er.findByCodigo(codigo);
+        convidado.setEvento(evento);
+        cr.save(convidado);
+        return "redirect:/{codigo}";
     }
 }
