@@ -2,6 +2,7 @@ package com.eventoapp.models;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Entidade Evento
@@ -28,6 +29,9 @@ public class Evento implements Serializable {
 
     @Column
     private String horario;
+
+    @OneToMany //um evento para muitos convidados
+    private List<Convidado> convidados;
 
     public Long getCodigo() {
         return codigo;

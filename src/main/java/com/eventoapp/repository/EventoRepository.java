@@ -8,5 +8,8 @@ import org.springframework.data.repository.CrudRepository;
  */
 
 public interface EventoRepository extends CrudRepository<Evento, String> {
+    //busca do codigo do evento
+    Evento findByCodigo(Long codigo);
+
 
 }
