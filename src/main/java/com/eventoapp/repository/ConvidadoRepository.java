@@ -8,4 +8,7 @@ public interface ConvidadoRepository extends CrudRepository<Convidado, String> {
 
     // ira buscar no BD os convidados de determinado evento
     Iterable<Convidado> findByEvento(Evento evento);
+
+    //ira buscar o rg pertencente ao convidado
+    Convidado findByRg(String rg);
 }
