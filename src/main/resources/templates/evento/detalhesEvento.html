@@ -15,20 +15,38 @@
         <!--Let browser know website is optimized for mobile-->
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
+        <!-- Link do arquivo styleCss, criado para melhorar a visualização da Lista de Convidados -->
+        <link rel="stylesheet" href="style/styleCss.css">
     </head>
     <body>
-        <h1> Eventos </h1>
-        <h3><a href="/eventos" class="waves-effect waves-light btn"><i
-                class="material-icons left">add_circle_outline</i>Lista de Eventos</a></h3>
+        <!-- Navbar adquirido no materialize.css-->
+        <header>
+            <nav>
+                <div class="nav-wrapper">
+                    <a href="#" class="brand-logo">Eventos</a>
+                    <ul id="nav-mobile" class="right hide-on-med-and-down">
+                        <li><a href="/eventos" class="waves-effect waves-light btn"><i class="material-icons left">add_circle_outline</i>Lista de Eventos</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+
         <!-- Detalhes de cada evento -->
-        <div th:each="evento : ${evento}" class="container">
+        <div th:each="evento : ${evento}" class="container detalhesEvento">
+            <h5>Detalhes do Evento</h5>
             <div class="row">
                 <p>Nome: <span th:text="${evento.nome}"></span></p>
                 <p>Local: <span th:text="${evento.local}"></span></p>
                 <p>Data: <span th:text="${evento.data}"></span></p>
                 <p>Horario: <span th:text="${evento.horario}"></span></p>
             </div>
+        </div>
 
+            <!-- Mensagem de validação -->
+            <th:block th:include="mensagemValidacao"></th:block>
+
+        <div class="container formConvidado">
             <form method="post">
                 Nome: <input type="text" value="" name="nomeConvidado" />
                 RG: <input type="text" value="" name="rg" />
@@ -37,17 +55,21 @@
         </div>
 
         <!-- Lista de convidados presentes em cada evento -->
-        <h5>Lista de Convidados</h5>
-        <div class="container" th:each="convidado : ${convidados}">
-            <div class="row">
-                <div class="input-field col s6">
-                    <p><span th:text="${convidado.nomeConvidado}"></span></p>
-                </div>
-                <div class="input-field col s3">
-                    <p><span th:text="${convidado.rg}"></span></p>
-                </div>
-            </div>
-        </div>
+        <table class="container tabelaConvidado">
+            <thead>
+            <caption><h5>Lista de Convidados</h5></caption>
+                <tr>
+                    <th>Nome do convidado</th>
+                    <th>RG</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="convidado : ${convidados}">
+                    <td><span th:text="${convidado.nomeConvidado}"></span></td>
+                    <td><span th:text="${convidado.rg}"></span></td>
+                </tr>
+            </tbody>
+        </table>
 
         <!--JavaScript at end of body for optimized loading-->
         <script type="text/javascript" src="materialize/js/materialize.min.js"></script>

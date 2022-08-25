@@ -6,10 +6,14 @@ import com.eventoapp.repository.ConvidadoRepository;
 import com.eventoapp.repository.EventoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import javax.validation.Valid;
 
 @Controller
 public class EventoController {
@@ -26,7 +30,7 @@ public class EventoController {
     }
 
     @RequestMapping(value="/cadastrarEvento", method = RequestMethod.POST) //ira salvar os dados do formulario
-    public String form(Evento evento){
+    public String form(@Valid Evento evento){
         //persistir no banco de dados
         er.save(evento);
         return "redirect:/cadastrarEvento";  //redirecionar para o /cadastrarEvento do metodo GET
@@ -54,10 +58,16 @@ public class EventoController {
     }
 
     @RequestMapping(value = "/{codigo}", method = RequestMethod.POST)
-    public String detalhesEventoPost(@PathVariable("codigo") Long codigo, Convidado convidado) {
+    public String detalhesEventoPost(@PathVariable("codigo") Long codigo, @Valid Convidado convidado, BindingResult result, RedirectAttributes attributes) {
+        //ira verificar se tem erros nos campos e ira exibir na view do browser
+        if (result.hasErrors()){
+            attributes.addFlashAttribute("mensagem", "Verifique os campos");
+            return "redirect:/{codigo}";
+        }
         Evento evento = er.findByCodigo(codigo);
         convidado.setEvento(evento);
         cr.save(convidado);
+        attributes.addFlashAttribute("mensagem", "Convidado adicionado com sucesso!");
         return "redirect:/{codigo}";
     }
 }

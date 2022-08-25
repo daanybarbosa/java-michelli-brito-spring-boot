@@ -1,15 +1,22 @@
 package com.eventoapp.models;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotEmpty;
+
 
 //Entidade/Tabela no banco de dados
 @Entity
 public class Convidado {
 
     @Id //chave primaria da tabela
+    @NotEmpty
+    //@Column(nullable = false, unique = true)
     private String rg;
+
+    @NotEmpty
     private String nomeConvidado;
 
     @ManyToOne //muitos convidados para um evento
